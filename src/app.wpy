@@ -1,0 +1,87 @@
+<style lang="less">
+    page {
+        width: 100%;
+        height: 100%;
+    }
+</style>
+
+<script>
+    import wepy from 'wepy'
+    import 'wepy-async-function'
+    import Api from '@/server/api';
+    import Utils from './common/js/utils.js';
+    wepy.api = new Api();
+    wepy.utils = Utils;
+
+    export default class extends wepy.app {
+        config = {
+            pages: [
+                'pages/index'
+            ],
+            window: {
+                backgroundTextStyle: 'light',
+                navigationBarBackgroundColor: '#fff',
+                navigationBarTitleText: 'WeChat',
+                navigationBarTextStyle: 'black'
+            },
+            // tabBar: {
+            //     list: [{
+            //             'pagePath': 'pages/tab_home',
+            //             'text': '首页',
+            //             'iconPath': 'common/images/ico1.png',
+            //             'selectedIconPath': 'common/images/ico1_act.png'
+            //         },
+            //         {
+            //             'pagePath': 'pages/tab_classify2',
+            //             'text': '分类',
+            //             'iconPath': 'common/images/ico2.png',
+            //             'selectedIconPath': 'common/images/ico2_act.png'
+            //         },
+            //         {
+            //             'pagePath': 'pages/tab_my',
+            //             'text': '个人中心',
+            //             'iconPath': 'common/images/ico3.png',
+            //             'selectedIconPath': 'common/images/ico3_act.png'
+            //         }
+            //     ],
+            //     color: '#333333',
+            //     selectedColor: '#CB231C',
+            //     backgroundColor: '#fff',
+            //     borderStyle: 'white'
+            // },
+            // subPackages: [{
+            //     root: "subPagesA",
+            //     pages: [
+                    
+            //     ]
+            // }]
+        }
+
+        globalData = {
+            userInfo: null
+        }
+
+        constructor() {
+            super()
+            this.use('requestfix');
+            this.use('promisify');
+        }
+
+        onLaunch() {
+
+        }
+
+        getUserInfo(cb) {
+            const that = this
+            if (this.globalData.userInfo) {
+                return this.globalData.userInfo
+            }
+            wepy.getUserInfo({
+                success(res) {
+                    that.globalData.userInfo = res.userInfo
+                    cb && cb(res.userInfo)
+                }
+            })
+        }
+    }
+</script>
